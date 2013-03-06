@@ -3,8 +3,9 @@ BattleshipContest
 
 Project to do Battleship Contest.
 
-To pull all submodules use next command:
-git submodule foreach git pull
+To fetch all submodules for the first time use the next command:
+
+git submodule update --init
 
 
 Submodule groupa\_battleship can be used as a start point.
