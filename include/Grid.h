@@ -21,6 +21,9 @@ public:
   bool Turn(const Point &point, Result &result);
   bool AllShipsAreDestroyed() const;
 private:
+  Cell & GetCellByPoint(int x, int y);
+  Cell & GetCellByPoint(const Point &point);
+private:
   std::vector<Cell> m_cells;
   std::map<std::string, int> m_shipsLeft;
   int m_sizeX;

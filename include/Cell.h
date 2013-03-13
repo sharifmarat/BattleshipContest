@@ -10,6 +10,10 @@ struct Cell
   bool hasShip;
   bool wasFired;
   std::string shipId;
+
+  Cell();
+
+  void SetShip(const std::string &shipName);
 };
 
 }

@@ -10,6 +10,8 @@ set(BC_CURRENT_SOURCES
   "src/ParseCmdOptions.cpp"
   "src/ShipFactory.cpp"
   "src/Rules.cpp"
+  "src/Cell.cpp"
+  "src/Grid.cpp"
   "src/main.cpp"
 )
 

@@ -11,6 +11,7 @@ struct Ship
   std::string name;
   Point startPoint;
   Point endPoint;
+
 };
 
 }
