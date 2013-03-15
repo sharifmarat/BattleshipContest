@@ -18,7 +18,7 @@ public:
   Grid();
 
   bool Reset(int sizeX, int sizeY, const std::vector<Ship> &ships);
-  bool Turn(const Point &point, Result &result);
+  bool Turn(const Point &point, ResultType &resultType, std::string &shipId);
   bool AllShipsAreDestroyed() const;
 private:
   Cell & GetCellByPoint(int x, int y);

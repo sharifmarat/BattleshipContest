@@ -11,6 +11,14 @@ enum ResultType
   ResultTypeDestroy
 };
 
+enum ResultGame
+{
+  ResultGameOnGoing,
+  ResultGameVictory,
+  ResultGameDefeat,
+  ResultGameDraw
+};
+
 struct Result
 {
   ResultType type;

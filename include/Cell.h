@@ -14,6 +14,11 @@ struct Cell
   Cell();
 
   void SetShip(const std::string &shipName);
+
+  bool HasAliveShip() const;
+
+  // returns true if cell has still alive ship
+  bool Fire();
 };
 
 }
