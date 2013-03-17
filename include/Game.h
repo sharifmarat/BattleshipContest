@@ -11,12 +11,14 @@ namespace BC
 class Game
 {
 public:
-  static const int FIRST_PLAYER = 0;
-  static const int SECOND_PLAYER = 1;
+  static const int FIRST_PLAYER;
+  static const int SECOND_PLAYER;
 public:
   bool NewGame(const Rules &rules);
   bool SetPosition(int playerID, const std::vector<Ship> &ships);
   bool Turn(int playerID, const Point &point, Result &result);
+protected:
+  inline int Opponent(int playerID) const { return (playerID == FIRST_PLAYER) ? SECOND_PLAYER : FIRST_PLAYER; }
 private:
   Rules m_rules;
   std::vector<Grid> m_grids;

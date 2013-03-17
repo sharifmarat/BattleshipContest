@@ -12,6 +12,7 @@ set(BC_CURRENT_SOURCES
   "src/Rules.cpp"
   "src/Cell.cpp"
   "src/Grid.cpp"
+  "src/Game.cpp"
   "src/main.cpp"
 )
 

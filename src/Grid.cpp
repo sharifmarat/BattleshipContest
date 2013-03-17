@@ -4,6 +4,11 @@
 namespace BC
 {
 
+Grid::Grid()
+  : m_sizeX(-1), m_sizeY(-1)
+{
+}
+
 bool Grid::Reset(int sizeX, int sizeY, const std::vector<Ship> &ships)
 {
   bool result = true;

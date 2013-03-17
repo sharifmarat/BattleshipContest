@@ -22,9 +22,9 @@ enum ResultGame
 struct Result
 {
   ResultType type;
+  ResultGame resultGame;
   std::string shipId;
   bool repeat;
-  bool gameFinished;
 };
 
 }
