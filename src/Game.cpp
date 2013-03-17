@@ -46,4 +46,20 @@ bool Game::Turn(int playerID, const Point &point, Result &result)
   return true;
 }
 
+void Game::MakeResultsConsistent(Result &result1, Result &result2) const
+{
+  if (result1.resultGame == ResultGameVictory && result2.resultGame == ResultGameVictory)
+  {
+    result1.resultGame = result2.resultGame = ResultGameDraw;
+  }
+  else if (result1.resultGame == ResultGameVictory && result2.resultGame != ResultGameVictory)
+  {
+    result2.resultGame = ResultGameDefeat;
+  }
+  else if (result1.resultGame != ResultGameVictory && result2.resultGame == ResultGameVictory)
+  {
+    result1.resultGame = ResultGameDefeat;
+  }
+}
+
 }
