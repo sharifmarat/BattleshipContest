@@ -39,8 +39,8 @@ namespace BC
       {
         Result result;
         result.repeat = true;
-        result.gameFinished = false;
-        while(result.repeat && !result.gameFinished) 
+        result.resultGame = ResultGameOnGoing;
+        while(result.repeat && result.resultGame == ResultGameOnGoing) 
         {
           Point point;
           engines[i]->YourTurn(point);
@@ -50,7 +50,7 @@ namespace BC
           }
           engines[i]->ReportResult(result);
           turns[i].push_back(point);
-          if (result.gameFinished) 
+          if (result.resultGame != ResultGameOnGoing)
           {
             gameFinished = true;
           }
