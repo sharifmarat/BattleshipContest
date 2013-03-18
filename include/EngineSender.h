@@ -29,7 +29,7 @@ public:
   void SendYourTurn();
   void SendOpponentTurns(const std::vector<Point> &points);
   void SendResult(const Result &result);
-  void SendGameFinished();\
+  void SendGameFinished(ResultGame result);\
   void SendError();
   void Close();
 private:

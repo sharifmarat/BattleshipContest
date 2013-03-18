@@ -131,9 +131,9 @@ namespace BC
   }
     
   
-  void Engine::FinishedGame()
+  void Engine::FinishedGame(ResultGame result)
   {
-    m_toEngine.SendGameFinished();
+    m_toEngine.SendGameFinished(result);
     m_fromEngine.ReceiveOk();
   }
   

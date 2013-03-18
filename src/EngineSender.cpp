@@ -107,9 +107,25 @@ void EngineSender::SendResult(const Result &result)
   SendString("RESULT\n" + ToString(result) + "\n");
 }
 
-void EngineSender::SendGameFinished()
+void EngineSender::SendGameFinished(ResultGame result)
 {
-  SendString("GAME_FINISHED\n");
+  std::string resultString;
+  switch(result)
+  {
+    case(ResultGameVictory):
+      resultString = "VICTORY";
+      break;
+    case(ResultGameDefeat):
+      resultString = "DEFEAT";
+      break;
+    case(ResultGameDraw):
+      resultString = "DRAW";
+      break;
+    default:
+      // throw error
+      break;
+  }
+  SendString("GAME_FINISHED " + resultString + "\n");
 }
 
 void EngineSender::SendError()

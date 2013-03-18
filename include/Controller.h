@@ -20,8 +20,8 @@ public:
   Controller(Engine *firstEngine, Engine * secondEngine);
   void PlayGame(const Rules &rules);
 private:
-  Game game;
-  Engine * engines[2];
+  Game m_Game;
+  Engine * m_Engines[2];
 };
 
 }

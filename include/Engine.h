@@ -8,6 +8,7 @@
 #include"Ship.h"
 #include"Point.h"
 #include"Rules.h"
+#include"Result.h"
 #include"EngineReceiver.h"
 #include"EngineSender.h"
 
@@ -32,7 +33,7 @@ public:
   void YourTurn(Point &point);
   void ReportResult(const Result &result);
   void OpponentTurns(std::vector<Point> &point);
-  void FinishedGame();
+  void FinishedGame(ResultGame result);
   std::string GetName();
   
 };

@@ -7,13 +7,13 @@ namespace BC
 {
   Controller::Controller(Engine *firstEngine, Engine * secondEngine)
   {
-    engines[0] = firstEngine;
-    engines[1] = secondEngine;
+    m_Engines[0] = firstEngine;
+    m_Engines[1] = secondEngine;
   }
   
   void Controller::PlayGame(const Rules &rules)
   {
-    game.NewGame(rules);
+    m_Game.NewGame(rules);
     std::vector<Ship> placement;
     std::vector<int> players;
     players.push_back(Game::FIRST_PLAYER);
@@ -21,8 +21,8 @@ namespace BC
     
     for(int i=0; i<players.size(); ++i)
     {
-      engines[i]->NewGame(rules, placement);
-      if (!game.SetPosition(players[i], placement))
+      m_Engines[i]->NewGame(rules, placement);
+      if (!m_Game.SetPosition(players[i], placement))
       {
         // throw error
       }
@@ -30,13 +30,18 @@ namespace BC
     
     // Repeat untill game finished
     bool gameFinished = false;
+    Result result[2];
     while(!gameFinished)
     {
    
       // Ask player for points:
       std::vector<Point> turns[2];
-      for(int i=0; i<players.size(); ++i) 
+      result[1].repeat = true;
+      result[2].repeat = true;
+      
+      while(result[0].repeat || result[1].repeat)
       {
+<<<<<<< HEAD
         Result result;
         result.repeat = true;
         result.resultGame = ResultGameOnGoing;
@@ -51,20 +56,30 @@ namespace BC
           engines[i]->ReportResult(result);
           turns[i].push_back(point);
           if (result.resultGame != ResultGameOnGoing)
+=======
+        Point point[2];
+        for(int i=0; i<players.size(); ++i) 
+        {
+          if (result[i].repeat)
+>>>>>>> Implemented simple engine controller (not tested)
           {
-            gameFinished = true;
+            m_Engines[i]->YourTurn(point[i]);
           }
+        
+          m_Game.Turn(players[i], point[i], result[i]);          
         }
+        m_Game.MakeResultsConsistent(result[0], result[1]);
       }
       
-      // Report opponent turns to players:
-      engines[0]->OpponentTurns(turns[1]);
-      engines[1]->OpponentTurns(turns[0]);
-    }
-    
+      m_Engines[0]->OpponentTurns(turns[1]);
+      m_Engines[1]->OpponentTurns(turns[0]);
+      
+      gameFinished = (result[0].resultGame != ResultGameOnGoing);
+    }   
+      
     for(int i=0; i<players.size(); ++i)
     {
-      engines[i]->FinishedGame();
+      m_Engines[i]->FinishedGame(result[i].resultGame);
     }
   }
 }
