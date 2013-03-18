@@ -1,0 +1,29 @@
+Controller to Engine: ->
+Engine to Controller: <-
+
+-> HELLO
+<- HELLO
+-> RULES
+   GRID ( sizeX, sizeY )
+   SHIPS [ ( "name", (xStart, yStart), (xEnd, yEnd)), ...]
+   REPORT_DESTROY 1/0
+   REPORT_SHIP_ON_HIT 1/0
+   REPREAT_ON_HIT 1/0
+<- OK
+-> NEW_GAME
+<- PLACEMENT [ ("name", (xStart,yStart), (xEnd, yEnd)), ...]
+
+Loop untill game finished:
+
+  Loop untill result is MISS:
+    -> YOUR_TURN
+    <- POINT (x,y)
+    -> RESULT ( HIT/MISS/DESTROY , "name")
+  End Loop
+
+  -> OPPONENT_TURNS [(x1,y1), ...]
+  <- OK
+End loop
+
+-> GAME_FINISHED
+<- OK

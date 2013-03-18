@@ -1,6 +1,8 @@
 #ifndef BC_RESULT_H
 #define BC_RESULT_H 1
 
+#include<string>
+
 namespace BC
 {
 

@@ -7,6 +7,10 @@ message(STATUS "Solution root directory : ${BC_SOLUTION_ROOT_DIR}")
 
 include_directories("${BC_SOLUTION_ROOT_DIR}/include")
 set(BC_CURRENT_SOURCES
+  "src/Engine.cpp"
+  "src/EngineSender.cpp"
+  "src/EngineReceiver.cpp"
+  "src/Controller.cpp"
   "src/ParseCmdOptions.cpp"
   "src/ShipFactory.cpp"
   "src/Rules.cpp"
