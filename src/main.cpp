@@ -49,12 +49,12 @@ int main(int argc, char* argv[])
     
     if (!cmdOpt.get(workdirFirstEngineOption, workdirFirstEngine))
     {
-      workdirFirstEngine = '/';
+      workdirFirstEngine = "./";
     }
     
     if (!cmdOpt.get(workdirSecondEngineOption, workdirSecondEngine))
     {
-      workdirSecondEngine = '/';
+      workdirSecondEngine = "./";
     }
     
     Engine firstEngine(pathFirstEngine, workdirFirstEngine);
