@@ -1,6 +1,4 @@
-
 #include <vector>
-
 #include"Controller.h"
 
 namespace BC
@@ -28,60 +26,45 @@ namespace BC
       }
     }
     
-    // Repeat untill game finished
+    // Repeat untill m_Game finished
     bool gameFinished = false;
-    Result result[2];
+    ResultGame resultGame;
     while(!gameFinished)
     {
    
       // Ask player for points:
       std::vector<Point> turns[2];
-      result[1].repeat = true;
-      result[2].repeat = true;
-      
-      while(result[0].repeat || result[1].repeat)
+      for(int i=0; i<players.size(); ++i) 
       {
-<<<<<<< HEAD
         Result result;
         result.repeat = true;
         result.resultGame = ResultGameOnGoing;
         while(result.repeat && result.resultGame == ResultGameOnGoing) 
         {
           Point point;
-          engines[i]->YourTurn(point);
-          if (!game.Turn(players[i], point, result))
+          m_Engines[i]->YourTurn(point);
+          if (!m_Game.Turn(players[i], point, result))
           {
             // throw error
           }
-          engines[i]->ReportResult(result);
+          m_Engines[i]->ReportResult(result);
           turns[i].push_back(point);
           if (result.resultGame != ResultGameOnGoing)
-=======
-        Point point[2];
-        for(int i=0; i<players.size(); ++i) 
-        {
-          if (result[i].repeat)
->>>>>>> Implemented simple engine controller (not tested)
           {
-            m_Engines[i]->YourTurn(point[i]);
+            gameFinished = true;
+            resultGame = result.resultGame;
           }
-        
-          m_Game.Turn(players[i], point[i], result[i]);          
         }
-        m_Game.MakeResultsConsistent(result[0], result[1]);
       }
       
+      // Report opponent turns to players:
       m_Engines[0]->OpponentTurns(turns[1]);
       m_Engines[1]->OpponentTurns(turns[0]);
-      
-      gameFinished = (result[0].resultGame != ResultGameOnGoing);
-    }   
-      
+    }
+    
     for(int i=0; i<players.size(); ++i)
     {
-      m_Engines[i]->FinishedGame(result[i].resultGame);
+      m_Engines[i]->FinishedGame(resultGame);
     }
   }
 }
-
-  
