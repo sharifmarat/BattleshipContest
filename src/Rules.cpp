@@ -9,12 +9,12 @@ namespace BC
 Rules::Rules()
 {
   // set default rules
-  int sizeX = 10;
-  int sizeY = 10;
-  bool allowAdjacency = false;
-  bool reportDestroy = true;
-  bool reportNameOnHit = false;
-  bool repeatOnHit = true;
+  sizeX = 10;
+  sizeY = 10;
+  allowAdjacency = false;
+  reportDestroy = true;
+  reportNameOnHit = false;
+  repeatOnHit = true;
 
   static const int MAX_LEN = 4;
 
@@ -30,8 +30,6 @@ Rules::Rules()
       ships.push_back(newShip);
     }
   }
-
-  std::vector<Ship> ships;
 }
 
 }
