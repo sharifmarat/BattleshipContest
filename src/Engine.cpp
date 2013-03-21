@@ -11,7 +11,7 @@
 namespace BC
 {
  
-  static pid_t runExecutable(const std::string &workdir, const std::string &path, FILE * &parentToChild, FILE * &childToParent)
+  static pid_t runExecutable(const std::string &workdir, const std::string &path, int &parentToChildFD, int &childToParentFD)
   {
     const int pipeRead = 0;
     const int pipeWrite = 1;
@@ -20,31 +20,21 @@ namespace BC
     
     int fdParentToChild[2];
     int fdChildToParent[2];
-    int fdOldStdIn;
-    int fdOldStdOut;
 
-    pid_t childPid;
-    
     // Create pipes for communication between parent and child:
     pipe(fdParentToChild); 
     pipe(fdChildToParent); 
 
-    // Save current stdin and stdout:
-    fdOldStdIn = dup(fdStdIn); 
-    fdOldStdOut = dup(fdStdOut); 
-
-    close(fdStdIn);
-    close(fdStdOut);
-
-    // Make read end of pipe as stdin and write end as stdout
-    dup2(fdParentToChild[pipeRead], fdStdIn); 
-    dup2(fdChildToParent[pipeWrite],fdStdOut); 
-
-    childPid = fork();
+    pid_t childPid = fork();
     
     if(childPid == 0)
     {
       // In child process.
+      close(STDOUT_FILENO);
+      close(STDIN_FILENO);
+      
+      dup2(fdParentToChild[pipeRead], STDIN_FILENO);
+      dup2(fdChildToParent[pipeWrite], STDOUT_FILENO);
       
       // No longer need pipes in child since stdin and stdout are already connected.
       close(fdParentToChild[pipeRead]); 
@@ -58,19 +48,12 @@ namespace BC
     else
     {
       // In parent process
-      
-      // Restore the original STDIN/STDOUT of parent
-      close(fdStdIn); 
-      close(fdStdOut);
-      dup2(fdOldStdIn, fdStdIn);
-      dup2(fdOldStdOut, fdStdOut);
-
       // These are used by the child:
       close(fdParentToChild[pipeRead]);
       close(fdChildToParent[pipeWrite]);
 
-      parentToChild = fdopen(fdParentToChild[pipeWrite], "w");
-      childToParent = fdopen(fdChildToParent[pipeRead], "r");
+      parentToChildFD = fdParentToChild[pipeWrite];
+      childToParentFD = fdChildToParent[pipeRead];
     }
     return childPid;
   }
@@ -85,8 +68,8 @@ namespace BC
   {
     
     {
-      FILE * pipeToEngine;
-      FILE * pipeFromEngine;
+      int pipeToEngine;
+      int pipeFromEngine;
     
       m_childPid = runExecutable(m_workdir, m_path, pipeToEngine, pipeFromEngine);
       

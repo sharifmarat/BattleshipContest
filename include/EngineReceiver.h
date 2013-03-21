@@ -19,9 +19,9 @@ namespace BC
 class EngineReceiver 
 {
 private:
-  FILE * m_Input;
+  int m_Input;
 public:
-  void SetInput(FILE * Input);
+  void SetInput(int Input);
   void ReceiveHello(std::string &name);
   void ReceivePoint(Point &point);
   void ReceivePlacement(std::vector<Ship> &placement);

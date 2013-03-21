@@ -8,7 +8,7 @@
 namespace BC
 {
   
-void EngineReceiver::SetInput(FILE * Input)
+void EngineReceiver::SetInput(int Input)
 {
   m_Input = Input;
 }
@@ -64,14 +64,13 @@ void EngineReceiver::ReceiveShip(Ship &ship)
 void EngineReceiver::ReceiveInt(int &i)
 {
   bool ok = false;
-  if (m_Input != NULL)
-  {
-    if (fscanf(m_Input, "%d", &i) == 1)
-    {
-      ok = true;
-    }
-  }
+  const int BUF_SIZE = 1024;
+  char buf[BUF_SIZE];
+  memset(buf, 0, BUF_SIZE);
+  ssize_t bytesRead = read(m_Input, &buf, BUF_SIZE);
+  ok = 0 < bytesRead && bytesRead < BUF_SIZE;
   if (!ok); // throw error
+  // string to i
 }
 
 void EngineReceiver::ReceiveKeyword(const std::string &keyword)
@@ -107,7 +106,7 @@ void EngineReceiver::ReceiveString(std::string &value)
   ReceiveChar("\""); 
   value.clear();
   bool finished = false;
-  while(!finished);
+  while(!finished)
   {
     char ch = ReadChar();
     if (ch != '"')
@@ -123,8 +122,8 @@ void EngineReceiver::ReceiveString(std::string &value)
 
 char EngineReceiver::ReadChar()
 {
-  int ich;
-  if (m_Input == NULL || (ich = fgetc(m_Input) == EOF)) 
+  char ich;
+  if (read(m_Input, &ich, 1) != 1) 
   {
     // throw error
   }
@@ -133,7 +132,7 @@ char EngineReceiver::ReadChar()
 
 void EngineReceiver::Close()
 {
-  if (m_Input == NULL || fclose(m_Input) != 0)
+  if (close(m_Input) != 0)
   {
     // throw error
   }

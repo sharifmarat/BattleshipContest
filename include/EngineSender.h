@@ -20,9 +20,9 @@ namespace BC
 class EngineSender
 {
 private:
-  FILE * m_Output;
+  int m_Output;
 public:
-  void SetOutput(FILE * Output);
+  void SetOutput(int Output);
   void SendHello();
   void SendNewGame();
   void SendRules(const Rules &rules);

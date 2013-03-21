@@ -72,7 +72,7 @@ static std::string ToString(const Rules &rules)
   return convert.str();
 }
 
-void EngineSender::SetOutput(FILE * Output)
+void EngineSender::SetOutput(int Output)
 {
   m_Output = Output;
 }
@@ -135,7 +135,7 @@ void EngineSender::SendError()
 
 void EngineSender::SendString(const std::string &str)
 {
-  if (m_Output != NULL || fprintf(m_Output, "%s", str.c_str()) != 1)
+  if (dprintf(m_Output, "%s", str.c_str()) < 1)
   {
     // throw error
   }
@@ -144,7 +144,7 @@ void EngineSender::SendString(const std::string &str)
 
 void EngineSender::Close()
 {
-  if (m_Output == NULL || fclose(m_Output) != 0)
+  if (close(m_Output) != 0)
   {
     // throw error
   }
