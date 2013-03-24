@@ -12,28 +12,37 @@
 #include<string>
 #include"Point.h"
 #include"Ship.h"
+#include"Result.h"
 
 namespace BC 
 {
-  
+class Rules;
+
 class EngineReceiver 
 {
 private:
   int m_Input;
 public:
   void SetInput(int Input);
+  void ReceiveHello();
   void ReceiveHello(std::string &name);
   void ReceivePoint(Point &point);
   void ReceivePlacement(std::vector<Ship> &placement);
+  void ReceiveRules(Rules &rules);
   void ReceiveOk();
+  void ReceiveNewGame();
+  void ReceiveYourTurn();
+  void ReceiveResult(Result &result);
+  void ReceiveOpponentTurns(std::vector<Point> &points);
+  void ReceiveGameFinished(ResultGame &resultGame);
   void Close();
 private:
   void ReceiveShip(Ship &ship);
+  void ReceiveShips(std::vector<Ship> &ships);
   void ReceiveInt(int &i);
+  void ReceiveBool(bool &b);
   void ReceiveKeyword(const std::string &keyword);
-  void ReceiveString(std::string &value);
-  void ReceiveChar(const std::string &ch);
-  void ReceiveChar(const std::string &chars, char &ch);
+  void ReceiveAlNumString(std::string &value);
   char ReadChar();
 };
 

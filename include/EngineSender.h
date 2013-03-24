@@ -24,8 +24,12 @@ private:
 public:
   void SetOutput(int Output);
   void SendHello();
+  void SendHello(const std::string &name);
+  void SendOK();
   void SendNewGame();
   void SendRules(const Rules &rules);
+  void SendPlacement(const std::vector<Ship> &placement);
+  void SendPoint(const Point &point);
   void SendYourTurn();
   void SendOpponentTurns(const std::vector<Point> &points);
   void SendResult(const Result &result);

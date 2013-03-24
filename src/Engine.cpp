@@ -91,6 +91,7 @@ namespace BC
   void Engine::NewGame(const Rules &rules, std::vector<Ship> placement)
   {
     m_toEngine.SendRules(rules);
+    m_fromEngine.ReceiveOk();
     m_toEngine.SendNewGame();
     m_fromEngine.ReceivePlacement(placement);
   }

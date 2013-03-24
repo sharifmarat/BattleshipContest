@@ -46,7 +46,7 @@ static std::string ToString(bool value)
 template<class T> std::string ToString(const std::vector<T> &vec)
 {
   std::ostringstream convert;
-  convert << "[";
+  convert << vec.size() << ":[";
   for(int i=0; i<vec.size(); ++i)
   {
     convert << ToString(vec[i]);
@@ -82,6 +82,16 @@ void EngineSender::SendHello()
   SendString("HELLO\n");
 }
 
+void EngineSender::SendHello(const std::string &name)
+{
+  SendString(std::string("HELLO ") + name + "\n");
+}
+
+void EngineSender::SendOK()
+{
+  SendString("OK\n");
+}
+
 void EngineSender::SendNewGame()
 {
   SendString("NEW_GAME\n");
@@ -92,9 +102,19 @@ void EngineSender::SendRules(const Rules &rules)
   SendString("RULES\n" + ToString(rules) + "\n");
 }
 
+void EngineSender::SendPlacement(const std::vector<Ship> &placement)
+{
+  SendString("PLACEMENT\n" + ToString(placement) + "\n");
+}
+
 void EngineSender::SendYourTurn()
 {
   SendString("YOUR_TURN\n");
+}
+
+void EngineSender::SendPoint(const Point &point)
+{
+  SendString(ToString(point));
 }
 
 void EngineSender::SendOpponentTurns(const std::vector<Point> &points)

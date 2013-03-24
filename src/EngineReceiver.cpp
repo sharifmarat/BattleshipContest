@@ -1,9 +1,12 @@
 #include<string>
 #include<vector>
 #include<cstdio>
+#include<sstream>
 #include"EngineReceiver.h"
 #include"Point.h"
 #include"Ship.h"
+#include"Rules.h"
+#include"Result.h"
 
 namespace BC
 {
@@ -13,35 +16,38 @@ void EngineReceiver::SetInput(int Input)
   m_Input = Input;
 }
 
+void EngineReceiver::ReceiveHello()
+{
+  ReceiveKeyword("HELLO");
+}
+
 void EngineReceiver::ReceiveHello(std::string &name)
 {
   ReceiveKeyword("HELLO");
-  ReceiveString(name);
+  ReceiveAlNumString(name);
 }
 
 void EngineReceiver::ReceivePoint(Point &point)
 {
-  ReceiveChar("(");
   ReceiveInt(point.x);
-  ReceiveChar(",");
   ReceiveInt(point.y);
-  ReceiveChar(")");
 }
 
 void EngineReceiver::ReceivePlacement(std::vector<Ship> &placement)
 {
   ReceiveKeyword("PLACEMENT");
-  ReceiveChar("[");
-  bool lastShip = false;
-  placement.clear();
-  while(!lastShip)
+  ReceiveShips(placement);
+}
+
+void EngineReceiver::ReceiveShips(std::vector<Ship> &ships)
+{
+  int numOfShips;
+  ReceiveInt(numOfShips);
+  for (int i=0; i<numOfShips; ++i)
   {
     Ship ship;
-    char ch;
     ReceiveShip(ship);
-    placement.push_back(ship);
-    ReceiveChar(",]", ch);
-    lastShip = (ch == ']');
+    ships.push_back(ship);
   }
 }
 
@@ -49,76 +55,154 @@ void EngineReceiver::ReceiveOk()
 {
   ReceiveKeyword("OK");
 }
+  
+void EngineReceiver::ReceiveNewGame()
+{
+  ReceiveKeyword("NEW_GAME");
+}
 
 void EngineReceiver::ReceiveShip(Ship &ship)
 {
-  ReceiveChar("(");
-  ReceiveString(ship.name);
-  ReceiveChar(",");
+  ReceiveAlNumString(ship.name);
   ReceivePoint(ship.startPoint);
-  ReceiveChar(",");
   ReceivePoint(ship.endPoint);
-  ReceiveChar(")");
+}
+
+void EngineReceiver::ReceiveRules(Rules &rules)
+{
+  ReceiveKeyword("RULES");
+
+  ReceiveKeyword("GRID_X");
+  ReceiveInt(rules.sizeX);
+
+  ReceiveKeyword("GRID_Y");
+  ReceiveInt(rules.sizeY);
+
+  ReceiveKeyword("SHIPS");
+  ReceiveShips(rules.ships);
+
+  ReceiveKeyword("ALLOW_ADJACENCY");
+  ReceiveBool(rules.allowAdjacency);
+
+  ReceiveKeyword("REPORT_DESTROY");
+  ReceiveBool(rules.reportDestroy);
+
+  ReceiveKeyword("REPORT_NAME_ON_HIT");
+  ReceiveBool(rules.reportNameOnHit);
+
+  ReceiveKeyword("REPEAT_ON_HIT");
+  ReceiveBool(rules.repeatOnHit);
+}
+
+void EngineReceiver::ReceiveYourTurn()
+{
+  ReceiveKeyword("YOUR_TURN");
+}
+
+void EngineReceiver::ReceiveResult(Result &result)
+{
+  ReceiveKeyword("RESULT");
+  std::string resultStr;
+  ReceiveAlNumString(resultStr);
+  if (resultStr == "HIT")
+  {
+    result.type = ResultTypeHit;
+  }
+  else if (resultStr == "MISS")
+  {
+    result.type = ResultTypeMiss;
+  }
+  else if (resultStr == "DESTROY")
+  {
+    result.type = ResultTypeDestroy;
+  }
+  else
+  {
+    throw ;
+  }
+  ReceiveAlNumString(result.shipId);
+}
+
+
+void EngineReceiver::ReceiveOpponentTurns(std::vector<Point> &points)
+{
+  points.clear();
+  ReceiveKeyword("OPPONENT_TURNS");
+  int numOfPoints;
+  ReceiveInt(numOfPoints);
+  for (int i=0; i<numOfPoints; ++i)
+  {
+    Point point;
+    ReceivePoint(point);
+    points.push_back(point);
+  }
+}
+
+void EngineReceiver::ReceiveGameFinished(ResultGame &resultGame)
+{
+  ReceiveKeyword("GAME_FINISHED");
+  std::string resultGameStr;
+  ReceiveAlNumString(resultGameStr);
+  if (resultGameStr == "VICTORY")
+  {
+    resultGame = ResultGameVictory;
+  }
+  else if (resultGameStr == "DEFEAT")
+  {
+    resultGame = ResultGameDefeat;
+  }
+  else if (resultGameStr == "DRAW")
+  {
+    resultGame = ResultGameDraw;
+  }
+  else
+  {
+    throw ;
+  }
+}
+
+
+
+void EngineReceiver::ReceiveBool(bool &b)
+{
+  int i;
+  ReceiveInt(i);
+  b = (bool)i;
 }
 
 void EngineReceiver::ReceiveInt(int &i)
 {
-  bool ok = false;
-  const int BUF_SIZE = 1024;
-  char buf[BUF_SIZE];
-  memset(buf, 0, BUF_SIZE);
-  ssize_t bytesRead = read(m_Input, &buf, BUF_SIZE);
-  ok = 0 < bytesRead && bytesRead < BUF_SIZE;
-  if (!ok); // throw error
-  // string to i
+  std::string str;
+  this->ReceiveAlNumString(str);
+  std::istringstream iss(str);
+  iss >> i;
 }
 
 void EngineReceiver::ReceiveKeyword(const std::string &keyword)
 {
-  for(int n=0; n < keyword.size(); ++n)
-  {
-    ReceiveChar(keyword.substr(n, 1));
-  }
+  std::string rec;
+  this->ReceiveAlNumString(rec);
+  if (keyword != rec) throw ;
 }
 
-void EngineReceiver::ReceiveChar(const std::string &chars)
+void EngineReceiver::ReceiveAlNumString(std::string &value)
 {
-  char ch;
-  ReceiveChar(chars, ch);
-}
-
-void EngineReceiver::ReceiveChar(const std::string &chars, char &ch)
-{
-  ch = ' ';
-  while(isspace(ch))
-  {
-    ch = ReadChar();
-  };
-  int n = chars.find(ch);
-  if (n  < 0 || n >= chars.size())
-  {
-    // throw error
-  }
-}
-
-void EngineReceiver::ReceiveString(std::string &value)
-{
-  ReceiveChar("\""); 
   value.clear();
   bool finished = false;
   while(!finished)
   {
     char ch = ReadChar();
-    if (ch != '"')
+    if (isalnum(ch) || ch == '_' || ch == '\'' || ch == '\"')
     {
       value.push_back(ch);
     }
-    else
+    else if (value.size() > 0)
     {
       finished = true;
     }
   }
 }
+
 
 char EngineReceiver::ReadChar()
 {
