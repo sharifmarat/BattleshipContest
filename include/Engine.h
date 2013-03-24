@@ -27,9 +27,10 @@ private:
   
 public:
   Engine(const std::string &path, const std::string &workdir);
+  ~Engine() { this->Kill(); }
   void Start();
   void Kill();
-  void NewGame(const Rules &rules, std::vector<Ship> positions);
+  void NewGame(const Rules &rules, std::vector<Ship> &positions);
   void YourTurn(Point &point);
   void ReportResult(const Result &result);
   void OpponentTurns(std::vector<Point> &point);

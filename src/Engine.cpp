@@ -1,7 +1,7 @@
-
 #include <vector>
 #include <cstdio>
 #include <cstddef>
+#include <signal.h>
 #include "Result.h"
 #include "Grid.h"
 #include "Ship.h"
@@ -83,12 +83,13 @@ namespace BC
   
   void Engine::Kill()
   {
-    m_toEngine.SendError();
+    //m_toEngine.SendError();
     m_toEngine.Close();
     m_fromEngine.Close();
+    kill(m_childPid, SIGTERM);
   }
   
-  void Engine::NewGame(const Rules &rules, std::vector<Ship> placement)
+  void Engine::NewGame(const Rules &rules, std::vector<Ship> &placement)
   {
     m_toEngine.SendRules(rules);
     m_fromEngine.ReceiveOk();

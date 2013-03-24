@@ -2,6 +2,7 @@
 #include<sstream>
 #include"EngineSender.h"
 #include"Result.h"
+#include"Exception.h"
 
 namespace BC
 {
@@ -142,7 +143,7 @@ void EngineSender::SendGameFinished(ResultGame result)
       resultString = "DRAW";
       break;
     default:
-      // throw error
+      throw Exception("Incorrect game result");
       break;
   }
   SendString("GAME_FINISHED " + resultString + "\n");
@@ -157,7 +158,7 @@ void EngineSender::SendString(const std::string &str)
 {
   if (dprintf(m_Output, "%s", str.c_str()) < 1)
   {
-    // throw error
+    throw Exception("Unable to send strin");
   }
   
 }
@@ -166,7 +167,7 @@ void EngineSender::Close()
 {
   if (close(m_Output) != 0)
   {
-    // throw error
+    throw Exception("Unable to close output");
   }
 }
 

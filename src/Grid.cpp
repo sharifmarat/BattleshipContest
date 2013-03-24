@@ -9,7 +9,7 @@ Grid::Grid()
 {
 }
 
-bool Grid::Reset(int sizeX, int sizeY, const std::vector<Ship> &ships)
+bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &ships)
 {
   bool result = true;
 
@@ -30,6 +30,7 @@ bool Grid::Reset(int sizeX, int sizeY, const std::vector<Ship> &ships)
   for (int i=0; result && i<ships.size(); ++i)
   {
     const Ship & ship = ships[i];
+    m_shipsLeft[ship.name] = ship.Length();
     const Point & startPoint = ship.startPoint;
     const Point & endPoint = ship.endPoint;
     int xmin = std::min(startPoint.x, endPoint.x);
@@ -40,6 +41,10 @@ bool Grid::Reset(int sizeX, int sizeY, const std::vector<Ship> &ships)
     {
       result = false;
       break;
+    }
+    if (!allowAdj)
+    {
+      //TODO
     }
     for (int x=xmin; x<=xmax; ++x)
     {

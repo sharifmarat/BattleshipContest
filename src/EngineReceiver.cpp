@@ -7,6 +7,7 @@
 #include"Ship.h"
 #include"Rules.h"
 #include"Result.h"
+#include"Exception.h"
 
 namespace BC
 {
@@ -41,6 +42,7 @@ void EngineReceiver::ReceivePlacement(std::vector<Ship> &placement)
 
 void EngineReceiver::ReceiveShips(std::vector<Ship> &ships)
 {
+  ships.clear();
   int numOfShips;
   ReceiveInt(numOfShips);
   for (int i=0; i<numOfShips; ++i)
@@ -118,7 +120,7 @@ void EngineReceiver::ReceiveResult(Result &result)
   }
   else
   {
-    throw ;
+    throw Exception("Wrong result type");
   }
   ReceiveAlNumString(result.shipId);
 }
@@ -157,7 +159,7 @@ void EngineReceiver::ReceiveGameFinished(ResultGame &resultGame)
   }
   else
   {
-    throw ;
+    throw Exception("Wrong game result type");
   }
 }
 
@@ -182,7 +184,7 @@ void EngineReceiver::ReceiveKeyword(const std::string &keyword)
 {
   std::string rec;
   this->ReceiveAlNumString(rec);
-  if (keyword != rec) throw ;
+  if (keyword != rec) throw Exception("Unexpected keyword");
 }
 
 void EngineReceiver::ReceiveAlNumString(std::string &value)
@@ -209,7 +211,7 @@ char EngineReceiver::ReadChar()
   char ich;
   if (read(m_Input, &ich, 1) != 1) 
   {
-    // throw error
+    throw Exception("Unable to read char from input");
   }
   return (char)ich;
 }
@@ -218,7 +220,7 @@ void EngineReceiver::Close()
 {
   if (close(m_Input) != 0)
   {
-    // throw error
+    throw Exception("Unable to close input");
   }
 }
 

@@ -26,7 +26,7 @@ Rules::Rules()
       Ship newShip;
       newShip.name = ShipFactory::GetInstance().CreateNewShipByLength(len);
       newShip.startPoint = Point(0, 0);
-      newShip.endPoint = Point(len, 0);
+      newShip.endPoint = Point(len-1, 0);
       ships.push_back(newShip);
     }
   }

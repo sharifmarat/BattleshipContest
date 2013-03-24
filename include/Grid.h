@@ -17,7 +17,7 @@ class Grid
 public:
   Grid();
 
-  bool Reset(int sizeX, int sizeY, const std::vector<Ship> &ships);
+  bool Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &ships);
   bool Turn(const Point &point, ResultType &resultType, std::string &shipId);
   bool AllShipsAreDestroyed() const;
 private:

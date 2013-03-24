@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include "ParseCmdOptions.h"
 #include "Engine.h"
 #include "Controller.h"
+#include "Exception.h"
 
 using namespace BC;
 
@@ -11,6 +13,7 @@ int main(int argc, char* argv[])
   const char pathSecondEngineOption = 's';
   const char workdirFirstEngineOption = 'w';
   const char workdirSecondEngineOption = 'x';
+  const char logOption = 'l';
   
   bool result = EXIT_SUCCESS;
 
@@ -22,6 +25,7 @@ int main(int argc, char* argv[])
   cmdOpt.addOption(pathSecondEngineOption, "Path to second engine", "secondEngine", true, true);
   cmdOpt.addOption(workdirFirstEngineOption, "Path for workdir of first engine", "pathWorkdirFirstEngine", false, true);
   cmdOpt.addOption(workdirSecondEngineOption, "Path for workdir of second engine", "pathWorkdirSecondEngine", false, true);
+  cmdOpt.addOption(logOption, "Path for log file", "logFile", false, true);
   
   std::string errMsg, helpMsg;
   cmdOpt.getInfo(helpMsg);
@@ -43,6 +47,7 @@ int main(int argc, char* argv[])
     std::string pathSecondEngine;
     std::string workdirFirstEngine;
     std::string workdirSecondEngine;
+    std::string logFile;
     
     cmdOpt.get(pathFirstEngineOption, pathFirstEngine);
     cmdOpt.get(pathSecondEngineOption, pathSecondEngine);
@@ -56,16 +61,33 @@ int main(int argc, char* argv[])
     {
       workdirSecondEngine = "./";
     }
+
+    std::ofstream log;
+    if (cmdOpt.get(logOption, logFile))
+    {
+      log.open(logFile.c_str());
+    }
+
+    if (log.is_open()) log << "log started" << std::endl;
     
-    Engine firstEngine(pathFirstEngine, workdirFirstEngine);
-    Engine secondEngine(pathSecondEngine, workdirSecondEngine);
-    firstEngine.Start();
-    secondEngine.Start();
-    
-    Controller controller(&firstEngine, &secondEngine);
-    controller.PlayGame(Rules());
-    
-    result = EXIT_SUCCESS;
+    try
+    {
+      Engine firstEngine(pathFirstEngine, workdirFirstEngine);
+      Engine secondEngine(pathSecondEngine, workdirSecondEngine);
+      firstEngine.Start();
+      secondEngine.Start();
+      
+      Controller controller(&firstEngine, &secondEngine);
+      controller.PlayGame(Rules());
+      result = EXIT_SUCCESS;
+    }
+    catch (const std::exception &exc)
+    {
+      if (log.is_open()) log << "catched exception: " << exc.what() << std::endl;
+      result = EXIT_FAILURE;
+    }
+
+    log.close();
   }
 
   return result;

@@ -1,5 +1,6 @@
 #include <vector>
 #include"Controller.h"
+#include"Exception.h"
 
 namespace BC
 {
@@ -22,7 +23,7 @@ namespace BC
       m_Engines[i]->NewGame(rules, placement);
       if (!m_Game.SetPosition(players[i], placement))
       {
-        // throw error
+        throw Exception("unable to set positions");
       }
     }
     
@@ -45,7 +46,7 @@ namespace BC
           m_Engines[i]->YourTurn(point);
           if (!m_Game.Turn(players[i], point, result))
           {
-            // throw error
+            throw Exception("Unable to do a turn");
           }
           m_Engines[i]->ReportResult(result);
           turns[i].push_back(point);

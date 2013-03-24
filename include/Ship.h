@@ -12,6 +12,15 @@ struct Ship
   Point startPoint;
   Point endPoint;
 
+  inline unsigned Length() const
+  {
+    return (startPoint.x != endPoint.x ? abs(startPoint.x - endPoint.x) : abs(startPoint.y - endPoint.y)) + 1;
+  }
+
+  inline bool operator<(const Ship &rhs) const
+  {
+    return this->Length() < rhs.Length();
+  }
 };
 
 }

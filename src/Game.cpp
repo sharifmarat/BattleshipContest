@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Game.h"
 #include "Rules.h"
 
@@ -17,7 +18,13 @@ bool Game::NewGame(const Rules &rules)
 
 bool Game::SetPosition(int playerID, const std::vector<Ship> &ships)
 {
-  return m_grids[playerID].Reset(m_rules.sizeX, m_rules.sizeY, ships);
+  if (m_rules.ships.size() != ships.size()) return false;
+  std::vector<Ship> sortedShipsRules(m_rules.ships), sortedShipsPlacement(ships);
+  std::sort(sortedShipsRules.begin(), sortedShipsRules.end());
+  std::sort(sortedShipsPlacement.begin(), sortedShipsPlacement.end());
+  if (!std::includes(sortedShipsRules.begin(), sortedShipsRules.end(),
+       sortedShipsPlacement.begin(), sortedShipsPlacement.end())) return false;
+  return m_grids[playerID].Reset(m_rules.sizeX, m_rules.sizeY, m_rules.allowAdjacency, ships);
 }
 
 bool Game::Turn(int playerID, const Point &point, Result &result)
