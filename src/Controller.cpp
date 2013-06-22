@@ -60,12 +60,15 @@ namespace BC
             resultGame = result.resultGame;
           }
         }
+        Logger::GetInstance() << m_Engines[i]->GetName() << " fired at opponent: " << "\n" << m_Game.GetGrid(m_Game.Opponent(i)) << std::endl;
       }
-      
+
       // Report opponent turns to players:
       m_Engines[0]->OpponentTurns(turns[1]);
       m_Engines[1]->OpponentTurns(turns[0]);
     }
+
+    Logger::GetInstance() << "Game finished, result = " << resultGame << std::endl;
     
     for(int i=0; i<players.size(); ++i)
     {

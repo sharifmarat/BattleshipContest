@@ -19,7 +19,6 @@ public:
   bool Turn(int playerID, const Point &point, Result &result);
   void MakeResultsConsistent(Result &result1, Result &result2) const;
   inline const Grid &GetGrid(int playerID) const { return m_grids[playerID]; }
-protected:
   inline int Opponent(int playerID) const { return (playerID == FIRST_PLAYER) ? SECOND_PLAYER : FIRST_PLAYER; }
 private:
   Rules m_rules;

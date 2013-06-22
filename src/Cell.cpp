@@ -31,7 +31,7 @@ bool Cell::Fire()
 Logger &operator<<(Logger &log, const Cell &cell)
 {
   if (cell.HasAliveShip()) log << "X";
-  else if (cell.hasShip) log << "*";
+  else if (cell.hasShip) log << "#";
   else if (cell.wasFired) log << "o";
   else log << ".";
   return log;
