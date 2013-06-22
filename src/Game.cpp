@@ -50,6 +50,10 @@ bool Game::Turn(int playerID, const Point &point, Result &result)
       result.repeat = false;
       break;
     case ResultTypeHit:
+      result.type = ResultTypeHit;
+      result.shipId = (m_rules.reportNameOnHit) ? shipId : "";
+      result.repeat = m_rules.repeatOnHit;
+      break;
     case ResultTypeDestroy:
       result.type = (m_rules.reportDestroy) ? ResultTypeDestroy : ResultTypeHit;
       result.shipId = (m_rules.reportNameOnHit) ? shipId : "";
