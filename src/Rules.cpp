@@ -16,20 +16,13 @@ Rules::Rules()
   reportNameOnHit = false;
   repeatOnHit = true;
 
-  static const int MAX_LEN = 4;
-
-  ShipFactory::GetInstance().Reset();
-  for (int len=1; len<=MAX_LEN; ++len)
-  {
-    for (int i=0; i<(MAX_LEN-len+1); ++i)
-    {
-      Ship newShip;
-      newShip.name = ShipFactory::GetInstance().CreateNewShipByLength(len);
-      newShip.startPoint = Point(0, 0);
-      newShip.endPoint = Point(len-1, 0);
-      ships.push_back(newShip);
-    }
-  }
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(5));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(4));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(3));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(3));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(2));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(2));
+  ships.push_back(ShipFactory::GetInstance().CreateNewShipByLength(2));
 }
 
 }

@@ -7,11 +7,13 @@
 namespace BC
 {
 
+struct Ship;
+
 class ShipFactory
 {
 public:
   static ShipFactory & GetInstance();
-  std::string CreateNewShipByLength(unsigned length);
+  Ship CreateNewShipByLength(unsigned length);
   void Reset();
 private:
   ShipFactory();

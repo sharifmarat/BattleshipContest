@@ -2,6 +2,7 @@
 #define BC_SHIP_H 1
 
 #include <string>
+#include <vector>
 #include "Point.h"
 
 namespace BC
