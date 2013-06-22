@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
       firstEngine.Start();
       secondEngine.Start();
       
-      Controller controller(&firstEngine, &secondEngine);
+      Controller controller(&firstEngine, &secondEngine, &log);
       controller.PlayGame(Rules());
       result = EXIT_SUCCESS;
     }

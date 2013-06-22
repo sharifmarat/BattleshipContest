@@ -35,7 +35,7 @@ public:
   void ReportResult(const Result &result);
   void OpponentTurns(std::vector<Point> &point);
   void FinishedGame(ResultGame result);
-  std::string GetName();
+  const std::string &GetName() const;
   
 };
 

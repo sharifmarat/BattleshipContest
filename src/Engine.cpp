@@ -122,7 +122,7 @@ namespace BC
     m_fromEngine.ReceiveOk();
   }
   
-  std::string Engine::GetName()
+  const std::string &Engine::GetName() const
   {
     return m_name;
   }

@@ -10,6 +10,11 @@ struct Point
 
   Point() : x(0), y(0) { }
   Point(int x, int y) : x(x), y(y) { }
+
+  inline Point GetNorth() const { return Point(this->x, this->y + 1); }
+  inline Point GetSouth() const { return Point(this->x, this->y - 1); }
+  inline Point GetLeft() const  { return Point(this->x - 1, this->y); }
+  inline Point GetRight() const { return Point(this->x + 1, this->y); }
 };
 }
 

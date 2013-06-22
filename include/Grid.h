@@ -21,8 +21,10 @@ public:
   bool Turn(const Point &point, ResultType &resultType, std::string &shipId);
   bool AllShipsAreDestroyed() const;
 private:
-  Cell & GetCellByPoint(int x, int y);
   Cell & GetCellByPoint(const Point &point);
+  const Cell & GetCellByPoint(const Point &point) const;
+  int GetNeighborCells(const Point &point, std::vector<Cell> &neighbors) const;
+  bool IsValidPoint(const Point &point) const;
 private:
   std::vector<Cell> m_cells;
   std::map<std::string, int> m_shipsLeft;

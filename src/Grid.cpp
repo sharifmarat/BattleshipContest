@@ -31,45 +31,47 @@ bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &s
   {
     const Ship & ship = ships[i];
     m_shipsLeft[ship.name] = ship.Length();
-    const Point & startPoint = ship.startPoint;
-    const Point & endPoint = ship.endPoint;
-    int xmin = std::min(startPoint.x, endPoint.x);
-    int xmax = std::max(startPoint.x, endPoint.x);
-    int ymin = std::min(startPoint.y, endPoint.y);
-    int ymax = std::max(startPoint.y, endPoint.y);
-    if (xmin < 0 || ymin < 0 || xmax >= m_sizeX || ymax >= m_sizeY)
+
+    std::vector<Point> points;
+    unsigned nPoints = ship.GetAllPoints(points);
+    for (std::vector<Point>::const_iterator pp = points.begin(); pp != points.end() && result; ++pp)
     {
-      result = false;
-      break;
-    }
-    if (!allowAdj)
-    {
-      //TODO
-    }
-    for (int x=xmin; x<=xmax; ++x)
-    {
-      for (int y=ymin; y<=ymax; ++y)
+      if (!this->IsValidPoint(*pp))
       {
-        Cell & cell = this->GetCellByPoint(x, y);
-        if (cell.HasAliveShip())
+        result = false;
+        break;
+      }
+      Cell & cell = this->GetCellByPoint(*pp);
+      if (cell.HasAliveShip())
+      {
+        result = false;
+        break;
+      }
+      if (!allowAdj)
+      {
+        std::vector<Cell> neighbors;
+        this->GetNeighborCells(*pp, neighbors);
+        for (std::vector<Cell>::const_iterator nn = neighbors.begin(); nn != neighbors.end(); ++nn)
         {
-          result = false;
-        }
-        else
-        {
-          cell.SetShip(ship.name);
+          if (nn->HasAliveShip() && nn->shipId != ship.name)
+          {
+            result = false;
+            break;
+          }
         }
       }
+      cell.SetShip(ship.name);
     }
   }
+
   return result;
 }
 
 bool Grid::Turn(const Point &point, ResultType &resultType, std::string &shipId)
 {
-  if (point.x < 0 || point.y < 0 || point.x >= m_sizeX || point.y >= m_sizeY) return false;
+  if (!this->IsValidPoint(point)) return false;
 
-  Cell &cell = this->GetCellByPoint(point.x, point.y);
+  Cell &cell = this->GetCellByPoint(point);
   if (!cell.Fire())
   {
     resultType = ResultTypeMiss;
@@ -96,15 +98,31 @@ bool Grid::AllShipsAreDestroyed() const
   return true;
 }
   
-Cell & Grid::GetCellByPoint(int x, int y)
-{
-  return m_cells[y * m_sizeX + x];
-}
-
-
 Cell & Grid::GetCellByPoint(const Point &point)
 {
-  return this->GetCellByPoint(point.x, point.y);
+  return m_cells[point.y * m_sizeX + point.x];
+  //return const_cast<Cell&>(static_cast<const Grid*>(this)->GetCellByPoint());
+}
+
+const Cell & Grid::GetCellByPoint(const Point &point) const
+{
+  return m_cells[point.y * m_sizeX + point.x];
+}
+
+int Grid::GetNeighborCells(const Point &point, std::vector<Cell> &neighbors) const
+{
+  neighbors.clear();
+  if (this->IsValidPoint(point.GetLeft())) neighbors.push_back(this->GetCellByPoint(point.GetLeft()));
+  if (this->IsValidPoint(point.GetNorth())) neighbors.push_back(this->GetCellByPoint(point.GetNorth()));
+  if (this->IsValidPoint(point.GetRight())) neighbors.push_back(this->GetCellByPoint(point.GetRight()));
+  if (this->IsValidPoint(point.GetSouth())) neighbors.push_back(this->GetCellByPoint(point.GetSouth()));
+
+  return 0;
+}
+
+bool Grid::IsValidPoint(const Point &point) const
+{
+  return (point.x >= 0 && point.y >= 0 && point.x < m_sizeX && point.y < m_sizeY) ? true : false;
 }
 
 }
