@@ -1,4 +1,5 @@
 #include <algorithm>
+#include "Logger.h"
 #include "Grid.h"
 
 namespace BC
@@ -18,6 +19,7 @@ bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &s
 
   if (sizeX < 1 || sizeY < 1)
   {
+    Logger::GetInstance() << "Error in Grid::Reset: sizeX = " << sizeX << "; sizeY = " << sizeY << std::endl;
     result = false;
   }
   else
@@ -38,12 +40,14 @@ bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &s
     {
       if (!this->IsValidPoint(*pp))
       {
+        Logger::GetInstance() << "Error in Grid::Reset: Point = " << pp->x << ", " << pp->y << " is out of grid" << std::endl;
         result = false;
         break;
       }
       Cell & cell = this->GetCellByPoint(*pp);
       if (cell.HasAliveShip())
       {
+        Logger::GetInstance() << "Error in Grid::Reset: Point = " << pp->x << ", " << pp->y << " already has a ship" << std::endl;
         result = false;
         break;
       }
@@ -55,6 +59,7 @@ bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &s
         {
           if (nn->HasAliveShip() && nn->shipId != ship.name)
           {
+            Logger::GetInstance() << "Error in Grid::Reset: Point = " << pp->x << ", " << pp->y << " already has a neighbor ship" << std::endl;
             result = false;
             break;
           }
@@ -96,6 +101,18 @@ bool Grid::AllShipsAreDestroyed() const
     if ((*it).second > 0) return false;
   }
   return true;
+}
+
+Logger & operator<<(Logger & log, const Grid &grid)
+{
+  for (int x = 0; x < grid.m_sizeX; ++x)
+  {
+    for (int y = 0; y < grid.m_sizeY; ++y)
+    {
+      log << grid.GetCellByPoint(Point(x, y));
+    }
+    log << std::endl;
+  }
 }
   
 Cell & Grid::GetCellByPoint(const Point &point)

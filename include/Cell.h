@@ -3,8 +3,12 @@
 
 #include <string>
 
+
 namespace BC
 {
+
+struct Logger;
+
 struct Cell
 {
   bool hasShip;
@@ -19,6 +23,8 @@ struct Cell
 
   // returns true if cell has still alive ship
   bool Fire();
+
+  friend Logger &operator<<(Logger &log, const Cell &cell);
 };
 
 }

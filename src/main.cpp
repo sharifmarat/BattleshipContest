@@ -1,9 +1,9 @@
 #include <iostream>
-#include <fstream>
 #include "ParseCmdOptions.h"
 #include "Engine.h"
 #include "Controller.h"
 #include "Exception.h"
+#include "Logger.h"
 
 using namespace BC;
 
@@ -62,13 +62,11 @@ int main(int argc, char* argv[])
       workdirSecondEngine = "./";
     }
 
-    std::ofstream log;
     if (cmdOpt.get(logOption, logFile))
     {
-      log.open(logFile.c_str());
+      Logger::GetInstance().StartLog(logFile);
     }
 
-    if (log.is_open()) log << "log started" << std::endl;
     
     try
     {
@@ -77,17 +75,15 @@ int main(int argc, char* argv[])
       firstEngine.Start();
       secondEngine.Start();
       
-      Controller controller(&firstEngine, &secondEngine, &log);
+      Controller controller(&firstEngine, &secondEngine);
       controller.PlayGame(Rules());
       result = EXIT_SUCCESS;
     }
     catch (const std::exception &exc)
     {
-      if (log.is_open()) log << "catched exception: " << exc.what() << std::endl;
+      Logger::GetInstance() << "catched exception: " << exc.what() << std::endl;
       result = EXIT_FAILURE;
     }
-
-    log.close();
   }
 
   return result;

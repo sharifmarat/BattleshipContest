@@ -1,19 +1,19 @@
 #include <vector>
+#include "Logger.h"
 #include"Controller.h"
 #include"Exception.h"
 
 namespace BC
 {
-  Controller::Controller(Engine *firstEngine, Engine * secondEngine, std::ofstream *log)
+  Controller::Controller(Engine *firstEngine, Engine * secondEngine)
   {
     m_Engines[0] = firstEngine;
     m_Engines[1] = secondEngine;
-    m_log = log;
   }
   
   void Controller::PlayGame(const Rules &rules)
   {
-    if (m_log != NULL && m_log->is_open()) *m_log << "Controller: game started" << std::endl;
+    Logger::GetInstance() << "Controller: game started" << std::endl;
     m_Game.NewGame(rules);
     std::vector<Ship> placement;
     std::vector<int> players;
@@ -22,12 +22,13 @@ namespace BC
     
     for(int i=0; i<players.size(); ++i)
     {
-      if (m_log != NULL && m_log->is_open()) *m_log << "Controller: sending new game to player #" << i << std::endl;
+      Logger::GetInstance() << "Controller: sending new game to player #" << i << std::endl;
       m_Engines[i]->NewGame(rules, placement);
       if (!m_Game.SetPosition(players[i], placement))
       {
         throw Exception((std::string("unable to set positions for engine ") + m_Engines[i]->GetName()).c_str());
       }
+      Logger::GetInstance() << m_Engines[i]->GetName() << " placement: " << "\n" << m_Game.GetGrid(i) << std::endl;
     }
     
     // Repeat untill m_Game finished

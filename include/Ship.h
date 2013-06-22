@@ -26,13 +26,16 @@ struct Ship
   inline unsigned GetAllPoints(std::vector<Point> &points) const
   {
     points.resize(this->Length());
-    if (this->IsHorizontal())
+    for (int i=0; i<this->Length(); ++i)
     {
-      for (int x=startPoint.x; x<=endPoint.x; ++x) points[startPoint.x-x] = Point(x, startPoint.y);
-    }
-    else
-    {
-      for (int y=startPoint.y; y<=endPoint.y; ++y) points[startPoint.y-y] = Point(startPoint.x, y);
+      if (this->IsHorizontal())
+      {
+        points[i] = Point(startPoint.x + i * (startPoint.x > endPoint.x ? -1 : 1), startPoint.y);
+      }
+      else               
+      {
+        points[i] = Point(startPoint.x, startPoint.y + i * (startPoint.y > endPoint.y ? -1 : 1));
+      }
     }
     return points.size();
   }

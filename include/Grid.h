@@ -8,6 +8,7 @@
 #include "Cell.h"
 #include "Ship.h"
 #include "Result.h"
+#include "Logger.h"
 
 namespace BC
 {
@@ -20,6 +21,7 @@ public:
   bool Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &ships);
   bool Turn(const Point &point, ResultType &resultType, std::string &shipId);
   bool AllShipsAreDestroyed() const;
+  friend Logger &operator<<(Logger &log, const Grid &grid);
 private:
   Cell & GetCellByPoint(const Point &point);
   const Cell & GetCellByPoint(const Point &point) const;

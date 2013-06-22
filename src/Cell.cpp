@@ -1,4 +1,5 @@
 #include "Cell.h"
+#include "Logger.h"
 
 namespace BC
 {
@@ -25,6 +26,15 @@ bool Cell::Fire()
   bool result = this->HasAliveShip();
   this->wasFired = true;
   return result;
+}
+
+Logger &operator<<(Logger &log, const Cell &cell)
+{
+  if (cell.HasAliveShip()) log << "X";
+  else if (cell.hasShip) log << "*";
+  else if (cell.wasFired) log << "o";
+  else log << ".";
+  return log;
 }
 
 }
