@@ -32,11 +32,13 @@ namespace BC
     }
     
     // Repeat untill m_Game finished
+    int turn = 1;
     bool gameFinished = false;
     ResultGame resultGame;
+
     while(!gameFinished)
     {
-   
+      Logger::GetInstance() << "TURN " << turn++ << std::endl;
       // Ask player for points:
       std::vector<Point> turns[2];
       for(int i=0; i<players.size(); ++i) 
@@ -68,7 +70,7 @@ namespace BC
       m_Engines[1]->OpponentTurns(turns[0]);
     }
 
-    Logger::GetInstance() << "Game finished, result = " << resultGame << std::endl;
+    Logger::GetInstance() << "Game finished in " << turn << " turns, result = " << resultGame << std::endl;
     
     for(int i=0; i<players.size(); ++i)
     {

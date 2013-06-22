@@ -3,6 +3,7 @@
 #include"EngineSender.h"
 #include"Result.h"
 #include"Exception.h"
+#include"Logger.h"
 
 namespace BC
 {
@@ -156,6 +157,7 @@ void EngineSender::SendError()
 
 void EngineSender::SendString(const std::string &str)
 {
+  Logger::GetInstance() << "EngineSender::SendString str = " << str << std::endl;
   if (dprintf(m_Output, "%s", str.c_str()) < 1)
   {
     throw Exception("Unable to send strin");

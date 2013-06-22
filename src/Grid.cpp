@@ -32,6 +32,12 @@ bool Grid::Reset(int sizeX, int sizeY, bool allowAdj, const std::vector<Ship> &s
   for (int i=0; result && i<ships.size(); ++i)
   {
     const Ship & ship = ships[i];
+    if (m_shipsLeft.find(ship.name) != m_shipsLeft.end())
+    {
+      Logger::GetInstance() << "Error in Grid::Reset:, ships cannot have the same name\n";
+      result = false;
+      break;
+    }
     m_shipsLeft[ship.name] = ship.Length();
 
     std::vector<Point> points;

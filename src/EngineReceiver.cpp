@@ -8,6 +8,7 @@
 #include"Rules.h"
 #include"Result.h"
 #include"Exception.h"
+#include"Logger.h"
 
 namespace BC
 {
@@ -203,6 +204,7 @@ void EngineReceiver::ReceiveAlNumString(std::string &value)
       finished = true;
     }
   }
+  Logger::GetInstance() << "EngineReceiver::ReceiveAlNumString str = " << value << std::endl;
 }
 
 

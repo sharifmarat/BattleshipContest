@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "Game.h"
 #include "Rules.h"
+#include "Logger.h"
 
 namespace BC
 {
@@ -18,12 +19,20 @@ bool Game::NewGame(const Rules &rules)
 
 bool Game::SetPosition(int playerID, const std::vector<Ship> &ships)
 {
-  if (m_rules.ships.size() != ships.size()) return false;
+  if (m_rules.ships.size() != ships.size()) 
+  {
+    Logger::GetInstance() << "Error in Game::SetPosition, size of ships <> rules" << "\n";
+    return false;
+  }
   std::vector<Ship> sortedShipsRules(m_rules.ships), sortedShipsPlacement(ships);
   std::sort(sortedShipsRules.begin(), sortedShipsRules.end());
   std::sort(sortedShipsPlacement.begin(), sortedShipsPlacement.end());
   if (!std::includes(sortedShipsRules.begin(), sortedShipsRules.end(),
-       sortedShipsPlacement.begin(), sortedShipsPlacement.end())) return false;
+       sortedShipsPlacement.begin(), sortedShipsPlacement.end()))
+  {
+    Logger::GetInstance() << "Error in Game::SetPosition, lengths of ships <> rules" << "\n";
+    return false;
+  }
   return m_grids[playerID].Reset(m_rules.sizeX, m_rules.sizeY, m_rules.allowAdjacency, ships);
 }
 
