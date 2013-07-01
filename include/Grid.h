@@ -22,12 +22,12 @@ public:
   bool Turn(const Point &point, ResultType &resultType, std::string &shipId);
   bool AllShipsAreDestroyed() const;
   friend Logger &operator<<(Logger &log, const Grid &grid);
-private:
+protected:
   Cell & GetCellByPoint(const Point &point);
   const Cell & GetCellByPoint(const Point &point) const;
   int GetNeighborCells(const Point &point, std::vector<Cell> &neighbors) const;
   bool IsValidPoint(const Point &point) const;
-private:
+protected:
   std::vector<Cell> m_cells;
   std::map<std::string, int> m_shipsLeft;
   int m_sizeX;

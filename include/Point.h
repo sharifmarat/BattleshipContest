@@ -15,6 +15,8 @@ struct Point
   inline Point GetSouth() const { return Point(this->x, this->y - 1); }
   inline Point GetLeft() const  { return Point(this->x - 1, this->y); }
   inline Point GetRight() const { return Point(this->x + 1, this->y); }
+
+  bool operator==(const Point &point) const { return this->x == point.x && this->y == point.y; }
 };
 }
 

@@ -119,6 +119,7 @@ Logger & operator<<(Logger & log, const Grid &grid)
     }
     log << std::endl;
   }
+  return log;
 }
   
 Cell & Grid::GetCellByPoint(const Point &point)
@@ -140,7 +141,7 @@ int Grid::GetNeighborCells(const Point &point, std::vector<Cell> &neighbors) con
   if (this->IsValidPoint(point.GetRight())) neighbors.push_back(this->GetCellByPoint(point.GetRight()));
   if (this->IsValidPoint(point.GetSouth())) neighbors.push_back(this->GetCellByPoint(point.GetSouth()));
 
-  return 0;
+  return neighbors.size();
 }
 
 bool Grid::IsValidPoint(const Point &point) const
