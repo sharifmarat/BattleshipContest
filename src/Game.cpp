@@ -66,20 +66,20 @@ bool Game::Turn(int playerID, const Point &point, Result &result)
   return true;
 }
 
-void Game::MakeResultsConsistent(Result &result1, Result &result2) const
+ResultGame Game::GetResultGame(int playerID) const
 {
-  if (result1.resultGame == ResultGameVictory && result2.resultGame == ResultGameVictory)
+  const Grid &playerGrid = this->GetGrid(playerID);
+  const Grid &opponentGrid = this->GetGrid(this->Opponent(playerID));
+  ResultGame resultGame = ResultGameDraw;
+  if (playerGrid.AllShipsAreDestroyed() && !opponentGrid.AllShipsAreDestroyed())
   {
-    result1.resultGame = result2.resultGame = ResultGameDraw;
+    resultGame = ResultGameDefeat;
   }
-  else if (result1.resultGame == ResultGameVictory && result2.resultGame != ResultGameVictory)
+  else if (!playerGrid.AllShipsAreDestroyed() && opponentGrid.AllShipsAreDestroyed())
   {
-    result2.resultGame = ResultGameDefeat;
+    resultGame = ResultGameVictory;
   }
-  else if (result1.resultGame != ResultGameVictory && result2.resultGame == ResultGameVictory)
-  {
-    result1.resultGame = ResultGameDefeat;
-  }
+  return resultGame;
 }
 
 }

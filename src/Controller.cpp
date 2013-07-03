@@ -34,7 +34,6 @@ namespace BC
     // Repeat untill m_Game finished
     int turn = 1;
     bool gameFinished = false;
-    ResultGame resultGame;
 
     while(!gameFinished)
     {
@@ -59,7 +58,6 @@ namespace BC
           if (result.resultGame != ResultGameOnGoing)
           {
             gameFinished = true;
-            resultGame = result.resultGame;
           }
         }
         Logger::GetInstance() << m_Engines[i]->GetName() << " fired at opponent: " << "\n" << m_Game.GetGrid(m_Game.Opponent(i)) << std::endl;
@@ -70,10 +68,10 @@ namespace BC
       m_Engines[1]->OpponentTurns(turns[0]);
     }
 
-    Logger::GetInstance() << "Game finished in " << turn << " turns, result = " << resultGame << std::endl;
-    
     for(int i=0; i<players.size(); ++i)
     {
+      ResultGame resultGame = m_Game.GetResultGame(i);
+      Logger::GetInstance() << "Game finished in " << turn << "turns, player " << m_Engines[i]->GetName() << " result = " << resultGame << std::endl;
       m_Engines[i]->FinishedGame(resultGame);
     }
   }
